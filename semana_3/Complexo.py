@@ -7,7 +7,7 @@ class Complexo:
     def soma(self, c2):
         return Complexo(self.a + c2.a, self.b + c2.b)
 
-    def multiplicacao(self, c2):
+    def multiplica(self, c2):
         return Complexo((self.a*c2.a - self.b*c2.b), (self.a*c2.b + c2.a*self.b))
 
     def __str__(self):
