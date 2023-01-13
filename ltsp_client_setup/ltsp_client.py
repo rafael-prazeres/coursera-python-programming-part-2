@@ -59,4 +59,4 @@ PASSWORDS_{1}="{1}/{2}"'''.format(
     )
 
     def get_dnsmasq_tag_mac_association(self, tag):
-        return "dhcp-mac=set:{0},{1}".format(tag, self.mac_address)
+        return "dhcp-mac=set:{0},{1}\n".format(tag, self.mac_address)
