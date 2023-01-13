@@ -6,7 +6,7 @@ class LtspClient:
         no processo de configuração/autorização em lote de clientes LTSP.
     '''
 
-    def __init__(self, mac_address, hostname, password, ip_address=None):
+    def __init__(self, mac_address=None, hostname=None, password="labinfo", ip_address=None):
         self.mac_address = mac_address
         self.hostname = hostname
         self.ip_address = ip_address
@@ -17,8 +17,9 @@ class LtspClient:
             return "{0} {1} {2} {3}".format(
                 self.mac_address,
                 self.hostname,
-                self.ip_address,
-                self.password.decode())
+                self.password.decode(),
+                self.ip_address)
+                
         else:
             return "{0} {1} {2}".format(
                 self.mac_address,
@@ -30,7 +31,7 @@ class LtspClient:
             return '''host %s {
     hardware ethernet %s;
     fixed-address %s;
-        }
+}
 subclass "%s" 1:%s;'''%(
                 self.hostname,
                 self.mac_address,
@@ -40,7 +41,7 @@ subclass "%s" 1:%s;'''%(
         else:
             return '''host %s {
     hardware ethernet %s;
-        }
+}
 subclass "%s" 1:%s;'''%(
                 self.hostname,
                 self.mac_address,
@@ -56,3 +57,6 @@ PASSWORDS_{1}="{1}/{2}"'''.format(
             self.hostname,
             self.password.decode()
     )
+
+    def get_dnsmasq_tag_mac_association(self, tag):
+        return "dhcp-mac=set:{0},{1}".format(tag, self.mac_address)
