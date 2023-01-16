@@ -11,11 +11,11 @@ class LtspClientSetupWizard:
         self.ltsp_clients = self.load_ltsp_clients_data(input_file)
 
     def run(self):
-        print("\nBem-vindo ao Assistente de Configuração de Terminais LTSP\n")
+        print("\nBem-vindo ao Assistente de Configuração de Terminais LTSP!")
         primeiro_terminal = 0
         if not self.ltsp_clients[primeiro_terminal].ip_address:
             if not self.first_ipaddress:
-                self.first_ipaddress = str(input("Informe o endereço IP do primeiro terminal: "))
+                self.first_ipaddress = str(input("\nInforme o endereço IP do primeiro terminal: "))
             for i in range (len(self.ltsp_clients)):
                 self.ltsp_clients[i].ip_address = ipaddress.IPv4Address(self.first_ipaddress) + i
         if not self.dhcp_subclass:
@@ -24,46 +24,43 @@ class LtspClientSetupWizard:
             self.dnsmasq_tag = str(input("\nInforme a tag dnsmasq: "))
 
         self.get_dhcp_hosts_declarations()
-        print("\nArquivo dhcp.out pronto!")
+        print("\n" + self.dnsmasq_tag + "-dhcp.conf pronto!")
         self.get_ltsp_client_sections()
-        print("\nArquivo ltsp.out pronto!")
+        print("\n" + self.dnsmasq_tag + "-ltsp.conf pronto!")
         self.get_dnsmasq_tag_mac_associations()
-        print("\nArquivo dnsmasq.out pronto!\n")
+        print("\n" + self.dnsmasq_tag + "-dnsmasq.conf pronto!")
 
     def get_dhcp_hosts_declarations(self):
         try:
-            os.remove("dhcp.out")
+            output_file = self.dnsmasq_tag + "-dhcp.conf"
+            os.remove(output_file)
         except OSError:
             pass
-        with open("dhcp.out", "a") as output_file_append_mode:
+        with open(output_file, "a") as output_file_append_mode:
             for ltsp_client in self.ltsp_clients:
-                # print (ltsp_client.get_dhcp_host_declaration(self.dhcp_subclass))
-                # print("")
                 output_file_append_mode.write(
                     ltsp_client.get_dhcp_host_declaration(self.dhcp_subclass))
                 output_file_append_mode.write("\n\n")
     
     def get_ltsp_client_sections(self):
         try:
-            os.remove("ltsp.out")
+            output_file = self.dnsmasq_tag + "-ltsp.conf"
+            os.remove(output_file)
         except OSError:
             pass
-        with open("ltsp.out", "a") as output_file_append_mode:
+        with open(output_file, "a") as output_file_append_mode:
             for ltsp_client in self.ltsp_clients:
-                # print (ltsp_client.get_ltsp_client_section())
-                # print("")
                 output_file_append_mode.write(ltsp_client.get_ltsp_client_section())
                 output_file_append_mode.write("\n\n")
     
     def get_dnsmasq_tag_mac_associations(self):
         try:
-            os.remove("dnsmasq.out")
+            output_file = self.dnsmasq_tag + "-dnsmasq.conf"
+            os.remove(output_file)
         except OSError:
             pass
-        with open("dnsmasq.out", "a") as output_file_append_mode:
+        with open(output_file, "a") as output_file_append_mode:
             for ltsp_client in self.ltsp_clients:
-                # print (ltsp_client.get_dnsmasq_tag_mac_association(self.dnsmasq_tag))
-                # print("")
                 output_file_append_mode.write(ltsp_client.get_dnsmasq_tag_mac_association(self.dnsmasq_tag))
 
     def load_ltsp_clients_data(self, input_file):
